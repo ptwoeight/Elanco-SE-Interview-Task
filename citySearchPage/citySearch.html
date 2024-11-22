@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SE DEMO</title>
+    <link rel="stylesheet" href="../homePage/style.css">
+    <link rel="stylesheet" href="cityStyle.css">
+</head>
+<body>
+    <header>
+        <a href="../homePage/index.html" id="pageTitle">Elanco's Country Wiki</a>
+    </header>
+    <nav>
+        <button><a href="../countrySearchPage/countrySearch.html" id="navButtons">Country Search</a></button>
+        <button><a href="../citySearchPage/citySearch.html" id="navButtons">City Search</a></button>
+    </nav>
+
+    <form action="" autocomplete="off" id="cityForm">
+        <div id="cityDropDownWrapper"class="cityDropDownWrapper">
+            <input id="cityDropDownInput" placeholder="Enter city">
+        </div>
+        <button type="submit" class="btnSubmit">Search</button>
+    </form>
+    <h1 id="searchedCity"></h1>
+    <p id="cityFlag"></p>
+
+    <script src="cityScript.js"></script>
+</body>
+</html>

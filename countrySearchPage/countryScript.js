@@ -59,8 +59,6 @@ async function countrySearch() {
       return country.country;
     });
 
-    console.log(listOfCountries);
-
   } catch (error) {
     console.error(error);
   }
@@ -122,3 +120,24 @@ function onCountryButtonClick(event) {
 
     removeCountryDropDown();
 }
+
+function searchForUserInput() {
+    const userEntered = document.getElementById("countryDropDownInput").value;
+    const searchedCountry  = document.getElementById("searchedCountry");
+    searchedCountry.textContent = userEntered;
+
+    //instantiate columns and stuff if country found
+    const countryFlag  = document.getElementById("countryFlag");
+    
+    if (listOfCountries.includes(userEntered)) {
+        countryFlag.textContent = "Country exists! Loading details..."
+    }
+    else {
+        countryFlag.textContent = "ERROR: Country doesn't exist. Try again."
+    }
+}
+
+document.getElementById("countryForm").onsubmit = function(event) {
+    event.preventDefault();
+    searchForUserInput();
+};
