@@ -1,8 +1,10 @@
 const countryInput = document.getElementById("countryDropDownInput");
 countryInput.addEventListener("input", onInputChange)
 let listOfCountries = [];
-
+let filteredNames = []; 
+let chartInstance = null;
 countrySearch()
+
 
 async function countrySearch() {
   try {
@@ -21,7 +23,6 @@ async function countrySearch() {
   }
 }
 
-    
 function onInputChange() {
     removeCountryDropDown(); //get rid of it and let the rest make a new one
 
@@ -31,7 +32,7 @@ function onInputChange() {
         return;
     }
 
-    const filteredNames = [];
+    filteredNames = [];
 
     listOfCountries.forEach(countryRead => {
         if (countryRead.substr(0, value.length).toLowerCase() === value){
@@ -41,6 +42,32 @@ function onInputChange() {
 
     createCountryDropDown(filteredNames);
 }
+
+countryInput.addEventListener('keydown', function(event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+
+    //if there are matching countries in the dropdown, click the top one
+    if (filteredNames.length > 0) {
+      const firstCountryButton = document.querySelector('.countryDropDown button');
+      firstCountryButton.click();
+    }
+  }
+});
+
+document.querySelector('.btnSubmit').addEventListener('click', function(event) {
+  event.preventDefault();
+
+  if (filteredNames.length > 0) {
+    const firstCountryButton = document.querySelector('.countryDropDown button');
+    firstCountryButton.click();
+  }
+  else {
+    displayInvalidCountryMessage();
+  }
+});
+
+
 
 function createCountryDropDown(list) {
     const listElement = document.createElement("ul");
@@ -68,14 +95,14 @@ function removeCountryDropDown() {  //there's a bunch of copies when u delete a 
     }
 }
 
+
+
 function onCountryButtonClick(event) {
     event.preventDefault();     //avoids doing the default
     const buttonElement = event.target;   //always references the country clicked
     countryInput.value = buttonElement.innerHTML;
-
-    //console.log(buttonElement);
-
     removeCountryDropDown();
+    searchForUserInput();
 }
 
 async function searchForUserInput() {
@@ -87,7 +114,7 @@ async function searchForUserInput() {
   document.getElementById("separator").style.display = 'none';
   document.getElementById("canvas").style.display = 'none';
 
-  if (listOfCountries.includes(userEntered)) {
+  if (listOfCountries.some(country => country.toLowerCase() === userEntered.toLowerCase())) {
     document.getElementById("separator").style.display = 'block';
     document.getElementById("canvas").style.display = 'block';
   
@@ -104,15 +131,11 @@ async function searchForUserInput() {
     populationChart(userEntered);
   } 
   else {
-    searchedCountry.innerHTML = "ERROR: Invalid country. Try again.";
-    document.getElementById("countryFlag").src = "";
-    document.getElementById("displayISO2").innerHTML = "";
-    document.getElementById("displayISO3").innerHTML = "";
-    document.getElementById("displayCapital").innerHTML = "";
-    document.getElementById("displayCityCount").innerHTML = "";
-    document.getElementById("chartTitle").innerHTML = "";
+    displayInvalidCountryMessage();
   }
 }
+
+
 
 async function displayFlag(countryName) {
   const flagURL = "https://countriesnow.space/api/v0.1/countries/flag/images";
@@ -128,6 +151,7 @@ async function displayFlag(countryName) {
     flagImage.src = matchingFlag.flag;
   }
   else{
+    flagImage.src = '';
     flagImage.alt = "[ Image of Country Flag ]";
   }
 }
@@ -163,7 +187,7 @@ async function displayCountryCityCount(countryName) {
   }
 }
 
-let chartInstance = null;
+
 
 async function populationChart(countryName) {
   const response = await fetch("https://countriesnow.space/api/v0.1/countries/population");
@@ -180,22 +204,20 @@ async function populationChart(countryName) {
 
     chartTitle.innerHTML = `Population Count of ${countryName}`;
 
-    // Ensure canvas is visible
-    document.getElementById("canvas").style.display = 'block';
-
     // Destroy the old chart if it exists
     if (chartInstance) {
       chartInstance.destroy();
     }
 
-    console.log(countryData);
-    console.log(popData);
+    // Ensure canvas is visible
+    document.getElementById("canvas").style.display = 'block';
+    
     // Create a new chart
     chartInstance = createChart(popData, countryName);
   } else {
-    chartInstance.destroy()
     document.getElementById("canvas").style.display = 'none';
-    chartTitle.innerHTML = "Error: Failed to generate chart.";
+    chartTitle.innerHTML = "Error: Failed to retrieve chart data.";
+    chartInstance = null;
   }
 }
 
@@ -223,6 +245,19 @@ function createChart(data) {
   });
 }
 
+
+
+function displayInvalidCountryMessage() {
+  searchedCountry.innerHTML = "ERROR: Invalid country. Try again.";
+  document.getElementById("countryFlag").src = "";
+  document.getElementById("countryFlag").alt = "";
+  document.getElementById("displayISO2").innerHTML = "";
+  document.getElementById("displayISO3").innerHTML = "";
+  document.getElementById("displayCapital").innerHTML = "";
+  document.getElementById("displayCityCount").innerHTML = "";
+  document.getElementById("chartTitle").innerHTML = "";
+  document.getElementById("canvas").innerHTML = "";
+}
 
 document.getElementById("countryForm").onsubmit = function(event) {
     event.preventDefault();
