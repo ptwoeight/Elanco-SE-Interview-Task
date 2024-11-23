@@ -9,18 +9,19 @@
 </head>
 <body>
     <header>
-        <a href="../homePage/index.html" id="pageTitle">Elanco's Country Wiki</a>
+        <header><img src="../images/elancoLogo.svg" alt="" id="logo"><a href="../homePage/index.html" id="pageTitle">Population Data</header>
     </header>
     <nav>
         <button><a href="../countrySearchPage/countrySearch.html" id="navButtons">Country Search</a></button>
         <button><a href="../citySearchPage/citySearch.html" id="navButtons">City Search</a></button>
     </nav>
-
+    <br>
     <form action="" autocomplete="off" id="cityForm">
         <div id="cityDropDownWrapper"class="cityDropDownWrapper">
             <input id="cityDropDownInput" placeholder="Enter city">
+            <button type="submit" class="btnSubmit">Search</button>
         </div>
-        <button type="submit" class="btnSubmit">Search</button>
+        
     </form>
     <h1 id="searchedCity"></h1>
     <p id="cityFlag"></p>

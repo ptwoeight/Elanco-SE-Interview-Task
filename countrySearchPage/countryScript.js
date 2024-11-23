@@ -1,46 +1,3 @@
-/* function capitaliseEachWord(str) {
-  return str
-    .split(" ") // Split the string into an array of words
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize the first letter of each word
-    .join(" "); // Join the array back into a string with spaces
-}
-
-async function fetchCapital() {
-  try {
-    const capitalURL = "https://countriesnow.space/api/v0.1/countries/capital";
-    const response = await fetch(capitalURL);
-
-    if (!response.ok) {
-      throw new Error("Could not fetch resource");
-    }
-    const data = await response.json();
-
-    //iterate through array where name is country and return its capital
-    //console.log(data);
-    const inputCountry = document
-      .getElementById("inputCountry")
-      .value.toLowerCase();
-
-    if (!inputCountry) {
-      throw new Error("Please enter a valid country name.");
-    }
-
-    const country = data.data.find(
-      (c) => c.name.toLowerCase() === inputCountry
-    );
-
-    if (country) {
-      const returnedCapital = document.getElementById("returnedCapital");
-      returnedCapital.textContent = `The capital of ${capitaliseEachWord(
-        inputCountry
-      )} is ${country.capital}.`;
-    } else {
-      throw new Error("Country not found.");
-    }
-  } catch (error) {
-    console.error(error);
-  }
-} */
 const countryInput = document.getElementById("countryDropDownInput");
 countryInput.addEventListener("input", onInputChange)
 let listOfCountries = [];
@@ -116,28 +73,159 @@ function onCountryButtonClick(event) {
     const buttonElement = event.target;   //always references the country clicked
     countryInput.value = buttonElement.innerHTML;
 
-    console.log(buttonElement);
+    //console.log(buttonElement);
 
     removeCountryDropDown();
 }
 
-function searchForUserInput() {
-    const userEntered = document.getElementById("countryDropDownInput").value;
-    const searchedCountry  = document.getElementById("searchedCountry");
-    searchedCountry.textContent = userEntered;
+async function searchForUserInput() {
+  //search bar confirm country
+  const userEntered = document.getElementById("countryDropDownInput").value;
+  const searchedCountry  = document.getElementById("searchedCountry");
+  searchedCountry.innerHTML = userEntered;
 
-    //instantiate columns and stuff if country found
-    const countryFlag  = document.getElementById("countryFlag");
+  document.getElementById("separator").style.display = 'none';
+  document.getElementById("canvas").style.display = 'none';
+
+  if (listOfCountries.includes(userEntered)) {
+    document.getElementById("separator").style.display = 'block';
+    document.getElementById("canvas").style.display = 'block';
+  
+    //flag
+    displayFlag(userEntered);
+
+    //iso and capital info
+    displayCountryDetails(userEntered);
+
+    //citycount info
+    displayCountryCityCount(userEntered);
     
-    if (listOfCountries.includes(userEntered)) {
-        countryFlag.textContent = "Country exists! Loading details..."
-    }
-    else {
-        countryFlag.textContent = "ERROR: Country doesn't exist. Try again."
-    }
+    //populationChart
+    populationChart(userEntered);
+  } 
+  else {
+    searchedCountry.innerHTML = "ERROR: Invalid country. Try again.";
+    document.getElementById("countryFlag").src = "";
+    document.getElementById("displayISO2").innerHTML = "";
+    document.getElementById("displayISO3").innerHTML = "";
+    document.getElementById("displayCapital").innerHTML = "";
+    document.getElementById("displayCityCount").innerHTML = "";
+    document.getElementById("chartTitle").innerHTML = "";
+  }
 }
+
+async function displayFlag(countryName) {
+  const flagURL = "https://countriesnow.space/api/v0.1/countries/flag/images";
+  const flagResponse = await fetch(flagURL);
+  const flagData = await flagResponse.json();
+
+  const matchingFlag = flagData.data.find(country => country.name === countryName);
+  const flagImage = document.getElementById("countryFlag");
+
+  console.log(matchingFlag);
+
+  if(matchingFlag) {
+    flagImage.src = matchingFlag.flag;
+  }
+  else{
+    flagImage.alt = "[ Image of Country Flag ]";
+  }
+}
+
+async function displayCountryDetails(countryName) {
+  const countryURL = "https://countriesnow.space/api/v0.1/countries/capital";
+  const countryResponse = await fetch(countryURL);
+  const countryData = await countryResponse.json();
+  const countryInfo = countryData.data.find(country => country.name === countryName);
+  if(countryInfo) {
+    document.getElementById("displayISO2").innerHTML = `ISO2: ${countryInfo.iso2}`;
+    document.getElementById("displayISO3").innerHTML = `ISO3: ${countryInfo.iso3}`;
+    document.getElementById("displayCapital").innerHTML = `Capital City: ${countryInfo.capital}`;
+  }
+  else {
+    document.getElementById("displayISO2").innerHTML = "ISO2: Not found.";
+    document.getElementById("displayISO3").innerHTML = "ISO3: Not found.";
+    document.getElementById("displayCapital").innerHTML = "Capital City: Not found.";
+  }
+}
+
+async function displayCountryCityCount(countryName) {
+  const countryCitiesURL = "https://countriesnow.space/api/v0.1/countries";
+  const citiesResponse = await fetch(countryCitiesURL);
+  const citiesData = await citiesResponse.json();
+  const countryWithCities = citiesData.data.find(country => country.country === countryName);
+  if (countryWithCities) {
+    const cityCount = countryWithCities.cities.length;
+    document.getElementById("displayCityCount").innerHTML = `Number of cities: ${cityCount}`;
+  }
+  else {
+    document.getElementById("displayCityCount").innerHTML = "Number of cities: Not found.";
+  }
+}
+
+let chartInstance = null;
+
+async function populationChart(countryName) {
+  const response = await fetch("https://countriesnow.space/api/v0.1/countries/population");
+  const data = await response.json();
+
+  const countryData = data.data.find(country => country.country.includes(countryName));
+  const chartTitle = document.getElementById("chartTitle");
+
+  if (countryData) {
+    const popData = countryData.populationCounts.map(item => ({
+      year: item.year,
+      value: item.value
+    }));
+
+    chartTitle.innerHTML = `Population Count of ${countryName}`;
+
+    // Ensure canvas is visible
+    document.getElementById("canvas").style.display = 'block';
+
+    // Destroy the old chart if it exists
+    if (chartInstance) {
+      chartInstance.destroy();
+    }
+
+    console.log(countryData);
+    console.log(popData);
+    // Create a new chart
+    chartInstance = createChart(popData, countryName);
+  } else {
+    chartInstance.destroy()
+    document.getElementById("canvas").style.display = 'none';
+    chartTitle.innerHTML = "Error: Failed to generate chart.";
+  }
+}
+
+function createChart(data) {
+  const ctx = document.getElementById('canvas').getContext('2d');
+
+  return new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: data.map(row => row.year),
+      datasets: [{
+        label: `Population count`,
+        data: data.map(row => row.value),
+        borderWidth: 1 
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      },
+      maintainAspectRatio: false
+    }
+  });
+}
+
 
 document.getElementById("countryForm").onsubmit = function(event) {
     event.preventDefault();
     searchForUserInput();
 };
+

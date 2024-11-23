@@ -140,4 +140,4 @@ function searchForUserInput() {
 document.getElementById("cityForm").onsubmit = function(event) {
     event.preventDefault();
     searchForUserInput();
-};
+};s
