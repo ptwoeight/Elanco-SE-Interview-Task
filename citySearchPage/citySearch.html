@@ -9,20 +9,43 @@
 </head>
 <body>
     <header><img src="../images/elancoLogo.svg" alt="" id="logo"><a href="../homePage/index.html" id="pageTitle">Population Data</header>
+
     <nav>
         <button><a href="../countrySearchPage/countrySearch.html" id="navButtons">Country Search</a></button>
         <button><a href="../citySearchPage/citySearch.html" id="navButtons">City Search</a></button>
     </nav>
+    
     <br>
+
     <form action="" autocomplete="off" id="cityForm">
         <div id="cityDropDownWrapper"class="cityDropDownWrapper">
             <input id="cityDropDownInput" placeholder="Type and choose a city">
             <button type="submit" class="btnSubmit">Search</button>
         </div>
     </form>
-    <h1 id="searchedCity"></h1>
-    <p id="cityFlag"></p>
 
+    <hr id="separator">
+
+    <h2 id="searchedCity"></h2>
+
+    <div class="imageContainer">
+        <img src="" alt="" id="cityFlag">
+    </div>
+    
+    <div class="detailContainer">
+        <p id="displayCountry"></p>
+        <p id="displayIsCapital"></p>
+    </div>
+    
+    <h3 id="chartTitle"></h3>
+
+    <div class="chartContainer">
+        <canvas id="canvas"></canvas>
+    </div>
+    
+    <!---->
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="cityScript.js"></script>
 </body>
 </html>

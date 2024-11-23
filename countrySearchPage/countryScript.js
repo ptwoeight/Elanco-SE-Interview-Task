@@ -231,7 +231,7 @@ function createChart(data) {
       datasets: [{
         label: `Population count`,
         data: data.map(row => row.value),
-        borderWidth: 1 
+        borderWidth: 2
       }]
     },
     options: {

@@ -1,4 +1,5 @@
 #canvas {
+    justify-content: center;
     display: none;
     width: 70%;
     height: 400px;
@@ -7,7 +8,10 @@
     border-radius: 3px;
     background: #0a133b;
     box-shadow: 0 0 10px #0e4980;
-    justify-content: center;
+}
+
+#cityFlag {
+    height: 150px;
 }
 
 #separator {
@@ -15,13 +19,27 @@
 }
 
 #cityDropDownInput {
-    width: 75%;      /* Set the width to 100% of its parent container */
-    height: 40px;     /* Adjust the height to your desired size */
-    font-size: 16px;  /* Optional: Increase font size for better readability */
-    padding: 8px;     /* Optional: Add some padding for aesthetics */
-    border-radius: 5px; /* Optional: Add rounded corners */
-    border: 1px solid #ccc; /* Optional: Style the border */
+    width: 75%;      
+    height: 40px;    
+    font-size: 20px;  
+    padding: 8px;     
+    border-radius: 5px; 
+    border: 1px solid #ccc; 
     justify-content: center;
+}
+
+.chartContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.imageContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
 .btnSubmit {
@@ -76,20 +94,12 @@
     padding: 0.25em;
 }
 
+h2, h3 {
+    text-align: center;
+}
+
 p {
     line-height: 3px;
     text-align: center;
 }
 
-h2, h3 {
-    text-align: center;
-}
-
-img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 100%;
-    height: 150px; 
-    justify-content: center;
-}
