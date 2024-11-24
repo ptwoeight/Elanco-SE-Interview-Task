@@ -204,15 +204,12 @@ async function populationChart(countryName) {
 
     chartTitle.innerHTML = `Population Count of ${countryName}`;
 
-    // Destroy the old chart if it exists
     if (chartInstance) {
       chartInstance.destroy();
     }
 
-    // Ensure canvas is visible
     document.getElementById("canvas").style.display = 'block';
     
-    // Create a new chart
     chartInstance = createChart(popData, countryName);
   } else {
     document.getElementById("canvas").style.display = 'none';
@@ -236,8 +233,12 @@ function createChart(data) {
     },
     options: {
       scales: {
+        x: {
+          offset: true
+        },
         y: {
-          beginAtZero: true
+          beginAtZero: true,
+          offset: true
         }
       },
       maintainAspectRatio: false
@@ -256,7 +257,12 @@ function displayInvalidCountryMessage() {
   document.getElementById("displayCapital").innerHTML = "";
   document.getElementById("displayCityCount").innerHTML = "";
   document.getElementById("chartTitle").innerHTML = "";
-  document.getElementById("canvas").innerHTML = "";
+  document.getElementById("canvas").style.display = 'none';
+  document.getElementById("separator").style.display = 'none';
+  
+  if (chartInstance) {
+    chartInstance.destroy();
+  }
 }
 
 document.getElementById("countryForm").onsubmit = function(event) {

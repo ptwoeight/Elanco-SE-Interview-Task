@@ -14,8 +14,8 @@
 
 #copyNotification {
     display: inline-block;
-    color: #4caf50; /* Green color for success */
-    font-size: 15px; /* Optional: Adjust font size */
+    color: #4caf50;
+    font-size: 15px;
     text-align: center;
 }
 

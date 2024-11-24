@@ -72,9 +72,9 @@
     position: absolute;
     width: 80%;
     margin-top: 60px;
-    max-height: 200px;    /* Limit the height to avoid overflowing */
-    overflow-y: auto;     /* Add scrollbars if there are too many options */
-    z-index: 10;          /* Ensure the dropdown appears above other elements */
+    max-height: 200px;    
+    overflow-y: auto;     
+    z-index: 10;          
 }
 .countryDropDown li {
     background-color: #ffffff;
