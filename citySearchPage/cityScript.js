@@ -254,8 +254,6 @@ function displayInvalidCityMessage() {
   }
 }
 
-
-
 document.getElementById("cityForm").onsubmit = function(event) {
     event.preventDefault();
     searchForUserInput();

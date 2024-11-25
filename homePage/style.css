@@ -54,6 +54,14 @@
     text-decoration: none;
 }
 
+nav .searchNavButtons {
+    font-size: 20px;
+}
+
+nav .searchNavButtons:hover {
+    color: #000000;
+}
+
 hr {
     margin: 50px;  
     border: none; 
@@ -93,14 +101,6 @@ h2 {
 a {
     color: #ffffff;
     font-weight: bold;
-}
-
-nav .searchNavButtons {
-    font-size: 20px;
-}
-
-nav .searchNavButtons:hover {
-    color: #000000;
 }
 
 nav {
